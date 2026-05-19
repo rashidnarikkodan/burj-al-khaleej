@@ -1,44 +1,117 @@
-# Burj Al Khaleej Bakery Web Application
+<div align="center">
+  <img src="https://via.placeholder.com/150x150.png?text=Burj+Al+Khaleej" alt="Burj Al Khaleej Logo" width="120" height="120" />
 
-A production-grade bakery management system built with React, Firebase, and Cloudinary.
+  # Burj Al Khaleej Bakery
+  
+  **A production-grade bakery management system & customer portal.**
 
-## Features
+  [![React](https://img.shields.io/badge/React-19.2-blue.svg?style=for-the-badge&logo=react)](https://react.dev)
+  [![Vite](https://img.shields.io/badge/Vite-8.0-646CFF.svg?style=for-the-badge&logo=vite)](https://vitejs.dev)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.2-38B2AC.svg?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com)
+  [![Firebase](https://img.shields.io/badge/Firebase-12.1-FFCA28.svg?style=for-the-badge&logo=firebase)](https://firebase.google.com)
+  [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.3-black.svg?style=for-the-badge&logo=framer)](https://www.framer.com/motion)
 
-- **Public Landing Page**: Stunning hero section, category highlights, and contact information.
-- **Dynamic Menu**: Real-time product listing with category filtering and OMR pricing.
-- **Admin Dashboard**: Secure management of products and categories.
-- **Image Management**: seamless integration with Cloudinary for optimized image hosting.
-- **Responsive Design**: Fully mobile-optimized using Tailwind CSS and Framer Motion.
+  [Features](#features) • [Tech Stack](#tech-stack) • [Installation](#installation) • [Configuration](#environment-variables) • [Firebase Setup](#firebase-setup)
+</div>
 
-## Tech Stack
+<br/>
 
-- **Frontend**: React 19 (Vite)
-- **State Management**: React Query (TanStack)
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Animations**: Framer Motion
-- **Backend**: Firebase Auth & Firestore
-- **Storage**: Cloudinary
+## 📋 Overview
+Burj Al Khaleej is a modern, responsive web application designed for a premium bakery. It features a stunning public-facing landing page and product menu, powered by a secure, real-time admin dashboard for managing inventory, categories, and media assets.
 
-## Setup Instructions
+---
+
+## ✨ Features
+### Customer Portal
+- **Immersive UI/UX**: Stunning hero section, dynamic category highlights, and micro-animations.
+- **Real-Time Menu**: Dynamic product listing with instant category filtering.
+- **Optimized Assets**: Ultra-fast image delivery via Cloudinary integration.
+- **Responsive Design**: Flawless experience across mobile, tablet, and desktop devices.
+
+### Admin Dashboard
+- **Secure Authentication**: Protected routes and role-based access control via Firebase Auth.
+- **Inventory Management**: Create, read, update, and delete (CRUD) operations for products and categories.
+- **Media Uploads**: Seamless, authenticated image uploads directly to Cloudinary.
+
+---
+
+## 🛠 Tech Stack
+
+| Category | Technologies |
+| --- | --- |
+| **Frontend Framework** | React 19, Vite 8 |
+| **Routing** | React Router v7 |
+| **Styling & UI** | Tailwind CSS v4, Lucide React, clsx, tailwind-merge |
+| **Animations** | Framer Motion v12 |
+| **State & Data Fetching** | TanStack React Query v5 |
+| **Backend & Database** | Firebase v12 (Auth, Firestore) |
+| **Storage & CDN** | Cloudinary |
+| **Package Manager** | pnpm |
+
+---
+
+## 📂 Project Structure
+
+```text
+burj-al-khaleej/
+├── public/                 # Static assets
+├── src/
+│   ├── components/         # Reusable UI components
+│   ├── hooks/              # Custom React hooks (React Query, etc.)
+│   ├── pages/              # Application routes/pages
+│   ├── services/           # Firebase & Cloudinary API clients
+│   ├── store/              # Global state management
+│   ├── types/              # TypeScript definitions (if applicable)
+│   ├── utils/              # Helper functions
+│   ├── App.jsx             # Root application component
+│   └── main.jsx            # Application entry point
+├── .env.example            # Environment variables template
+├── tailwind.config.js      # Tailwind CSS configuration
+└── vite.config.ts          # Vite configuration
+```
+
+---
+
+## 🚀 Getting Started
 
 ### 1. Prerequisites
-- Node.js (v18+)
-- pnpm (`npm install -g pnpm`)
+- **Node.js** (v18.0.0 or newer)
+- **pnpm** installed globally (`npm install -g pnpm`)
 
-### 2. Environment Configuration
-Create a `.env` file in the root directory based on `.env.example`:
+### 2. Installation
+Clone the repository and install dependencies:
+```bash
+git clone https://github.com/your-org/burj-al-khaleej.git
+cd burj-al-khaleej
+pnpm install
+```
 
+### 3. Environment Variables
+Copy the example environment file and fill in your credentials:
 ```bash
 cp .env.example .env
 ```
+Required variables typically include:
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
+VITE_CLOUDINARY_UPLOAD_PRESET=your_preset
+```
 
-Fill in your Firebase and Cloudinary credentials:
-- **Firebase**: Create a project at [firebase.google.com](https://console.firebase.google.com/) and enable Auth (Email/Password) and Firestore.
-- **Cloudinary**: Sign up at [cloudinary.com](https://cloudinary.com/) and create an unsigned upload preset.
+---
 
-### 3. Firebase Security Rules
-Deploy these rules to your Firestore:
+## 🔥 Firebase Setup
+
+1. **Create a Project**: Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
+2. **Enable Services**: 
+   - Enable **Authentication** (Email/Password provider).
+   - Enable **Firestore Database**.
+3. **Deploy Security Rules**: Apply the following rules to secure your Firestore database:
 
 ```javascript
 rules_version = '2';
@@ -70,32 +143,52 @@ service cloud.firestore {
 }
 ```
 
-### 4. Admin Setup
-To grant a user admin access:
-1. Register the user via the Firebase Console or the app (if registration is enabled).
-2. Manually create a document in the `users` collection in Firestore:
-   - **Document ID**: The UID of the user.
-   - **Fields**: `{ role: "admin" }`
-
-### 5. Installation
-```bash
-pnpm install
-```
-
-### 6. Development
-```bash
-pnpm dev
-```
-
-### 7. Production Build
-```bash
-pnpm build
-```
-
-## Deployment
-This app is ready for deployment on **Vercel** or **Netlify**. Ensure you add the environment variables in your deployment dashboard.
+### Admin Access
+To grant a user admin privileges:
+1. Register the user via the application or Firebase Auth console.
+2. In the Firestore database, manually create a `users` collection.
+3. Create a document with the Document ID matching the user's `UID`.
+4. Add the field: `role: "admin"`.
 
 ---
 
-Crafted with ❤️ for **Burj Al Khaleej**.
-# burj-al-khaleej
+## ☁️ Cloudinary Setup
+
+1. Sign up at [Cloudinary](https://cloudinary.com/).
+2. Go to **Settings > Upload** and create an **Unsigned Upload Preset**.
+3. Copy the Cloud Name and Upload Preset into your `.env` file.
+
+---
+
+## 💻 Available Scripts
+
+In the project directory, you can run:
+
+| Command | Description |
+| :--- | :--- |
+| `pnpm dev` | Starts the development server with Hot Module Replacement (HMR). |
+| `pnpm build` | Builds the app for production to the `dist` folder. |
+| `pnpm preview` | Serves the production build locally for testing. |
+| `pnpm lint` | Runs ESLint to check for code quality and style issues. |
+
+---
+
+## 🌍 Deployment
+
+This application is optimized for zero-config deployments on modern edge platforms.
+
+### Vercel / Netlify
+1. Push your code to a Git repository (GitHub/GitLab/Bitbucket).
+2. Import the project into Vercel or Netlify.
+3. The build settings should automatically be detected:
+   - **Framework Preset**: Vite
+   - **Build Command**: `pnpm build`
+   - **Output Directory**: `dist`
+4. Add all environment variables from your `.env` file into the deployment dashboard.
+5. Deploy!
+
+---
+
+<div align="center">
+  <p>Crafted with ❤️ for <b>Burj Al Khaleej</b>.</p>
+</div>
