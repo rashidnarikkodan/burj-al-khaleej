@@ -14,6 +14,7 @@ import { useLanguage, regions } from '../context/LanguageContext';
 import { translations } from '../lib/translations';
 import { useLocations } from '../features/locations/hooks';
 import { useCategories } from '../features/categories/hooks';
+import { CONTACT_INFO, SOCIAL_LINKS, getWhatsAppNumber } from '../config/constants';
 
 const Home = () => {
   const { theme } = useTheme();
@@ -24,9 +25,7 @@ const Home = () => {
   const { data: dynamicCategories, isLoading: categoriesLoading } = useCategories();
   const { data: dynamicLocations, isLoading: locationsLoading } = useLocations(region);
 
-  const whatsappNumbers = {
-    OM: '96897668570'
-  };
+  const whatsappPhone = getWhatsAppNumber(region);
 
   const categories = dynamicCategories || [];
   const locations = dynamicLocations || [];
@@ -121,7 +120,7 @@ const Home = () => {
                 {t.hero.explore}
                 <ArrowRight className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${lang === 'ar' ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
               </Link>
-              <a href={`https://wa.me/${whatsappNumbers[region]}`} target="_blank" rel="noreferrer" className="btn-secondary px-8 py-4 text-lg">
+              <a href={`https://wa.me/${whatsappPhone}`} target="_blank" rel="noreferrer" className="btn-secondary px-8 py-4 text-lg">
                 {t.hero.whatsapp}
               </a>
             </div>
@@ -282,7 +281,7 @@ const Home = () => {
                   <Phone className="w-6 h-6" />
                   {t.cta.callUs}
                 </a>
-                <a href={`https://wa.me/${whatsappNumbers[region]}`} target="_blank" rel="noreferrer" className="bg-white text-black px-10 py-5 rounded-full font-black text-xl hover:scale-105 transition-transform flex items-center gap-3">
+                <a href={`https://wa.me/${whatsappPhone}`} target="_blank" rel="noreferrer" className="bg-white text-black px-10 py-5 rounded-full font-black text-xl hover:scale-105 transition-transform flex items-center gap-3">
                   <WhatsappIcon className="w-6 h-6" />
                   {t.cta.whatsapp}
                 </a>
@@ -310,16 +309,16 @@ const Home = () => {
                 {lang === 'ar' ? 'نصنع الحلويات بحب وشغف لنجعل كل لحظاتكم مميزة وطعم لا ينسى.' : 'Crafting premium sweets with love and passion to make every moment special and unforgettable.'}
               </p>
               <div className="flex items-center gap-4">
-                <a href="https://www.instagram.com/burj__alkhaleej/" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary-500 hover:text-black transition-all">
+                <a href={SOCIAL_LINKS.INSTAGRAM} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary-500 hover:text-black transition-all">
                   <Instagram className="w-4 h-4" />
                 </a>
-                <a href="https://facebook.com/burj__alkhaleej/" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary-500 hover:text-black transition-all">
+                <a href={SOCIAL_LINKS.FACEBOOK} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary-500 hover:text-black transition-all">
                   <Facebook className="w-4 h-4" />
                 </a>
-                <a href="https://twitter.com/burj__alkhaleej/" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary-500 hover:text-black transition-all">
+                <a href={SOCIAL_LINKS.TWITTER} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary-500 hover:text-black transition-all">
                   <Twitter className="w-4 h-4" />
                 </a>
-                <a href="mailto:burjalkhaleej@gmail.com" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary-500 hover:text-black transition-all">
+                <a href={`mailto:${CONTACT_INFO.SUPPORT_EMAIL}`} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary-500 hover:text-black transition-all">
                   <Mail className="w-4 h-4" />
                 </a>
               </div>
@@ -342,11 +341,15 @@ const Home = () => {
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="w-4 h-4 text-primary-500 shrink-0" />
-                  <span className="text-slate-400/80 text-sm font-medium">{locations[0]?.phone || ''}</span>
+                  <a href={`tel:${locations[0]?.phone || CONTACT_INFO.PHONE}`} className="text-slate-400/80 hover:text-primary-500 text-sm font-medium transition-colors">
+                    {locations[0]?.phone || CONTACT_INFO.PHONE}
+                  </a>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-primary-500 shrink-0" />
-                  <a href="mailto:contact@burjalkhaleej.com" className="text-slate-400/80 hover:text-primary-500 text-sm font-medium transition-colors">contact@burjalkhaleej.com</a>
+                  <a href={`mailto:${CONTACT_INFO.EMAIL}`} className="text-slate-400/80 hover:text-primary-500 text-sm font-medium transition-colors">
+                    {CONTACT_INFO.EMAIL}
+                  </a>
                 </li>
               </ul>
             </div>

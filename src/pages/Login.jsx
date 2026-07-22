@@ -1,9 +1,7 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Lock, Mail, Loader2, ChevronLeft, ShieldCheck } from 'lucide-react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import { Lock, Mail, Loader2, ChevronLeft, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import ThemeToggle from '../components/ui/ThemeToggle';
 import LanguageToggle from '../components/ui/LanguageToggle';
 import { useLanguage } from '../context/LanguageContext';
@@ -14,43 +12,41 @@ const Login = () => {
   const { lang } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, user, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Toast State
   const [toastData, setToastData] = useState({ isOpen: false, message: '', type: 'success' });
-  const showToast = (message, type = 'success') => {
-    setToastData({ isOpen: true, message, type });
-  };
+
+  // Auto redirect if already logged in
+  useEffect(() => {
+    if (user && isAdmin) {
+      const destination = location.state?.from?.pathname || '/admin';
+      navigate(destination, { replace: true });
+    }
+  }, [user, isAdmin, navigate, location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
-    try {
-      await login(email, password);
-      navigate('/admin');
-    } catch (err) {
-      setError(lang === 'ar' ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة.' : 'Invalid email or password.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const handleSetupAdmin = async () => {
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !password) {
+      setError(lang === 'ar' ? 'يرجى إدخال البريد الإلكتروني وكلمة المرور' : 'Please enter email and password.');
+      return;
+    }
+
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, 'admin@burjalkhaleej.com', 'admin123');
-      showToast('Admin account created: admin@burjalkhaleej.com / admin123', 'success');
+      await login(cleanEmail, password);
+      const destination = location.state?.from?.pathname || '/admin';
+      navigate(destination, { replace: true });
     } catch (err) {
-      if (err.code === 'auth/email-already-in-use') {
-        showToast('Admin account already exists.', 'info');
-      } else {
-        showToast('Error: ' + err.message, 'error');
-      }
+      console.error("Authentication error:", err.code);
+      setError(lang === 'ar' ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة.' : 'Invalid email or password credentials.');
     } finally {
       setLoading(false);
     }
@@ -58,12 +54,12 @@ const Login = () => {
 
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center bg-surface-50 dark:bg-surface-950 px-4 transition-colors duration-500 overflow-hidden relative ${lang === 'ar' ? 'font-arabic' : ''}`}>
-      {/* Decorative Orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] aspect-square bg-primary-500/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] aspect-square bg-primary-500/10 blur-[120px] rounded-full pointer-events-none" />
+      {/* Background Gold Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[45%] aspect-square bg-primary-500/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[45%] aspect-square bg-primary-500/10 blur-[130px] rounded-full pointer-events-none" />
 
-      <header className="fixed top-0 left-0 right-0 p-6 flex justify-between items-center z-50">
-        <Link to="/" className="flex items-center gap-2 text-surface-600 dark:text-surface-400 hover:text-primary-500 font-bold transition-colors bg-white/50 dark:bg-surface-900/50 backdrop-blur-md px-4 py-2 rounded-xl border border-surface-200 dark:border-surface-800">
+      <header className="fixed top-0 left-0 right-0 p-4 sm:p-6 flex justify-between items-center z-50 max-w-7xl mx-auto">
+        <Link to="/" className="flex items-center gap-2 text-surface-600 dark:text-surface-400 hover:text-primary-500 font-bold transition-colors bg-white/70 dark:bg-surface-900/70 backdrop-blur-md px-4 py-2 rounded-2xl border border-surface-200 dark:border-surface-800 shadow-sm">
           <ChevronLeft className={`w-5 h-5 ${lang === 'ar' ? 'rotate-180' : ''}`} />
           <span className="hidden sm:inline">{lang === 'ar' ? 'العودة للرئيسية' : 'Back Home'}</span>
         </Link>
@@ -73,39 +69,43 @@ const Login = () => {
         </div>
       </header>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="max-w-md w-full glass p-8 sm:p-10 rounded-[40px] relative z-10 border border-surface-100 dark:border-surface-800 shadow-2xl"
+        className="max-w-md w-full bg-white/80 dark:bg-surface-900/80 backdrop-blur-2xl p-8 sm:p-10 rounded-[40px] relative z-10 border border-surface-200 dark:border-surface-800 shadow-2xl shadow-black/10 dark:shadow-black/50"
       >
-        <div className="text-center mb-10">
-          <motion.div 
-            initial={{ scale: 0 }}
+        <div className="text-center mb-8">
+          <motion.div
+            initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", delay: 0.2 }}
-            className="w-24 h-24 bg-surface-950 rounded-3xl flex items-center justify-center shadow-2xl mx-auto mb-8 border border-surface-800 overflow-hidden group"
+            transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+            className="w-20 h-20 bg-black dark:bg-surface-950 rounded-3xl flex items-center justify-center shadow-2xl mx-auto mb-6 border border-white/10 overflow-hidden group"
           >
-            <img src="/logo-round.png" alt="Logo" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+            <img src="/logo-round.png" alt="Burj Al Khaleej Logo" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
           </motion.div>
-          <h1 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-surface-50 mb-3 uppercase tracking-tighter">
-            {lang === 'ar' ? 'دخول الأدمن' : 'Admin Login'}
+
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 uppercase tracking-tighter">
+            {lang === 'ar' ? 'تسجيل دخول الموظفين' : 'Staff Login'}
           </h1>
-          <p className="text-surface-500 dark:text-surface-400 font-bold flex items-center justify-center gap-2">
+          <p className="text-slate-500 dark:text-slate-400 font-bold text-xs sm:text-sm flex items-center justify-center gap-2">
             <ShieldCheck className="w-4 h-4 text-primary-500" />
-            {lang === 'ar' ? 'لوحة التحكم الآمنة' : 'Secure dashboard access'}
+            {lang === 'ar' ? 'بوابة الإدارة الآمنة' : 'Secure Manager Portal'}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <label className="block text-sm font-black text-surface-700 dark:text-surface-300 uppercase tracking-widest ml-1">{lang === 'ar' ? 'البريد الإلكتروني' : 'Email'}</label>
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+              {lang === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}
+            </label>
             <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-primary-500 transition-colors w-5 h-5" />
+              <Mail className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors w-5 h-5`} />
               <input
                 type="email"
                 required
-                className="input-field pl-12 bg-surface-50/50 dark:bg-surface-900/50"
+                autoComplete="email"
+                className={`input-field input-with-icon-left bg-surface-50 dark:bg-surface-950/50`}
                 placeholder="admin@burjalkhaleej.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -114,56 +114,58 @@ const Login = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-black text-surface-700 dark:text-surface-300 uppercase tracking-widest ml-1">{lang === 'ar' ? 'كلمة المرور' : 'Password'}</label>
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+              {lang === 'ar' ? 'كلمة المرور' : 'Password'}
+            </label>
             <div className="relative group">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-primary-500 transition-colors w-5 h-5" />
+              <Lock className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors w-5 h-5`} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
-                className="input-field pl-12 bg-surface-50/50 dark:bg-surface-900/50"
+                autoComplete="current-password"
+                className={`input-field input-with-icon-left bg-surface-50 dark:bg-surface-950/50 ${lang === 'ar' ? 'pl-12' : 'pr-12'}`}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={`absolute ${lang === 'ar' ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1`}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
           </div>
 
           {error && (
-            <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="bg-red-500/10 text-red-600 dark:text-red-400 p-4 rounded-2xl text-sm border border-red-500/20 font-bold flex items-center gap-3">
-              <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
-              {error}
+            <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="bg-red-500/10 text-red-600 dark:text-red-400 p-4 rounded-2xl text-xs sm:text-sm border border-red-500/20 font-bold flex items-center gap-3">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />
+              <span>{error}</span>
             </motion.div>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary w-full py-5 text-xl relative overflow-hidden group shadow-primary-500/40"
+            className="btn-primary w-full py-4 text-lg relative overflow-hidden group shadow-lg shadow-primary-500/30"
           >
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            <span className="relative z-10 flex items-center justify-center gap-3">
-              {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (lang === 'ar' ? 'تسجيل الدخول' : 'Sign In')}
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (lang === 'ar' ? 'تسجيل الدخول' : 'Sign In')}
             </span>
           </button>
         </form>
       </motion.div>
 
-      <button 
-        onClick={handleSetupAdmin}
-        className="fixed bottom-20 text-[10px] text-surface-300 dark:text-surface-600 hover:text-primary-500 transition-colors uppercase tracking-[0.2em] font-black"
-      >
-        [ Setup Admin Account ]
-      </button>
-
-      <footer className="fixed bottom-8 text-surface-400 text-xs font-bold uppercase tracking-widest">
-        &copy; {new Date().getFullYear()} Burj Al Khaleej Admin Portal
+      <footer className="mt-12 text-slate-400 text-xs font-bold uppercase tracking-widest text-center">
+        &copy; {new Date().getFullYear()} Burj Al Khaleej Staff Portal
       </footer>
 
-      <Toast 
-        isOpen={toastData.isOpen} 
-        message={toastData.message} 
-        type={toastData.type} 
-        onClose={() => setToastData(prev => ({ ...prev, isOpen: false }))} 
+      <Toast
+        isOpen={toastData.isOpen}
+        message={toastData.message}
+        type={toastData.type}
+        onClose={() => setToastData(prev => ({ ...prev, isOpen: false }))}
       />
     </div>
   );

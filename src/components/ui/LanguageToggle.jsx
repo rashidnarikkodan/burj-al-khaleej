@@ -45,21 +45,24 @@ const LanguageToggle = ({ direction = 'down', align = 'right' }) => {
             <div className="p-3 sm:p-4">
               <p className="text-[10px] font-black text-surface-400 uppercase tracking-widest mb-2 sm:mb-3">Language</p>
               <div className="grid grid-cols-1 gap-1">
-                {Object.entries(languages).map(([id, data]) => (
-                  <button
-                    key={id}
-                    onClick={() => {
-                      setLang(id);
-                      setIsOpen(false);
-                    }}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${
-                      lang === id ? 'bg-primary-50 dark:bg-primary-900/10 text-primary-600' : 'hover:bg-surface-50 dark:hover:bg-surface-800'
-                    }`}
-                  >
-                    <span className="font-bold text-xs sm:text-sm">{data.name}</span>
-                    {lang === id && <Check className="w-4 h-4" />}
-                  </button>
-                ))}
+                {Object.entries(languages).map(([id, data]) => {
+                  const fontClass = id === 'ar' ? 'font-arabic' : id === 'hi' ? 'font-hindi' : 'font-sans';
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => {
+                        setLang(id);
+                        setIsOpen(false);
+                      }}
+                      className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${
+                        lang === id ? 'bg-primary-50 dark:bg-primary-900/10 text-primary-600' : 'hover:bg-surface-50 dark:hover:bg-surface-800'
+                      }`}
+                    >
+                      <span className={`font-bold text-xs sm:text-sm ${fontClass}`}>{data.name}</span>
+                      {lang === id && <Check className="w-4 h-4" />}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </motion.div>
