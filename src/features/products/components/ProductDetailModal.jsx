@@ -1,7 +1,9 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../../context/LanguageContext';
 import { getWhatsAppOrderUrl } from '../../../config/constants';
+import { X } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 const ProductDetailModal = ({ product, categoryName, isOpen, onClose }) => {
   const { lang, formatPrice, region } = useLanguage();
