@@ -21,7 +21,7 @@ const ProductDetailModal = ({ product, categoryName, isOpen, onClose }) => {
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-white dark:bg-surface-900 w-full max-w-lg rounded-[32px] overflow-hidden shadow-2xl border border-surface-100 dark:border-surface-800 relative"
+          className="bg-white dark:bg-surface-900 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-[32px] sm:rounded-[32px] shadow-2xl border border-surface-100 dark:border-surface-800 relative break-words"
         >
           <button
             onClick={onClose}
@@ -45,18 +45,18 @@ const ProductDetailModal = ({ product, categoryName, isOpen, onClose }) => {
             )}
           </div>
 
-          <div className="p-6 sm:p-8 space-y-6">
+          <div className="p-5 sm:p-8 space-y-5 sm:space-y-6">
             <div>
               {categoryName && (
-                <span className="inline-block px-3 py-1 bg-primary-500/10 text-primary-600 dark:text-primary-400 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
+                <span className="inline-block px-3 py-1 bg-primary-500/10 text-primary-600 dark:text-primary-400 rounded-full text-xs font-bold uppercase tracking-wider mb-3 break-words">
                   {categoryName}
                 </span>
               )}
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight break-words">
                 {product.name}
               </h2>
               {product.description && (
-                <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base font-medium leading-relaxed mt-3">
+                <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base font-medium leading-relaxed mt-3 break-words">
                   {product.description}
                 </p>
               )}

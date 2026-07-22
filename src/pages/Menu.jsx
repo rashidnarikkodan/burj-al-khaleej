@@ -168,12 +168,12 @@ const Menu = () => {
                     )}
                   </div>
 
-                  <div className="p-5 sm:p-6 flex flex-col flex-grow bg-white dark:bg-surface-900 relative z-20">
-                    <h3 className="font-black text-surface-900 dark:text-white text-lg sm:text-xl leading-snug mb-1 group-hover:text-primary-500 transition-colors">
+                  <div className="p-5 sm:p-6 flex flex-col flex-grow bg-white dark:bg-surface-900 relative z-20 break-words">
+                    <h3 className="font-black text-surface-900 dark:text-white text-lg sm:text-xl leading-snug mb-1 group-hover:text-primary-500 transition-colors break-words">
                       {product.name}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 font-medium leading-relaxed line-clamp-2 mb-4">
+                    <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 font-medium leading-relaxed line-clamp-2 mb-4 break-words">
                       {product.description || (lang === 'ar' ? 'كيك ومخبوزات طازجة مصنوعة بكل حب يومياً.' : 'Freshly baked delights crafted daily with premium ingredients.')}
                     </p>
 

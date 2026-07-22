@@ -59,7 +59,7 @@ const Navbar = ({ isMenuPage = false }) => {
           <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-surface-700 dark:text-surface-200 hover:text-primary-500 transition-colors"
+            className="md:hidden p-2.5 text-surface-700 dark:text-surface-200 hover:text-primary-500 transition-colors rounded-xl active:bg-surface-100 dark:active:bg-surface-800"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -81,27 +81,36 @@ const Navbar = ({ isMenuPage = false }) => {
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
-              className="absolute top-full left-0 right-0 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800 p-6 z-50 md:hidden shadow-2xl space-y-4"
+              className="absolute top-full left-0 right-0 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800 p-6 z-50 md:hidden shadow-2xl space-y-3"
             >
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-xl font-bold transition-colors ${isActive('/')
-                    ? 'bg-primary-500/10 text-primary-600'
+                className={`block px-4 py-3 rounded-2xl font-bold transition-colors ${
+                  isActive('/')
+                    ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-extrabold'
                     : 'text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800'
-                  }`}
+                }`}
               >
                 {t.nav.home}
               </Link>
               <Link
                 to="/menu"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-xl font-bold transition-colors ${isActive('/menu')
-                    ? 'bg-primary-500/10 text-primary-600'
+                className={`block px-4 py-3 rounded-2xl font-bold transition-colors ${
+                  isActive('/menu')
+                    ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-extrabold'
                     : 'text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800'
-                  }`}
+                }`}
               >
                 {t.nav.menu}
+              </Link>
+              <Link
+                to="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-3 rounded-2xl font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors"
+              >
+                {lang === 'ar' ? 'بوابة الإدارة (الأدمن)' : 'Staff Portal (Admin)'}
               </Link>
             </motion.div>
           </>
