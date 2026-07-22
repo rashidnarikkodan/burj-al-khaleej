@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, ChevronRight, MapPin, Phone, Instagram, ArrowRight, Star, Clock, Heart, Award, Quote, Facebook, Twitter, Mail } from 'lucide-react';
 
@@ -9,6 +10,7 @@ const WhatsappIcon = ({ className }) => (
 import { motion, useScroll, useSpring } from 'framer-motion';
 import ThemeToggle from '../components/ui/ThemeToggle';
 import LanguageToggle from '../components/ui/LanguageToggle';
+import OutletMap from '../components/ui/OutletMap';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage, regions } from '../context/LanguageContext';
 import { translations } from '../lib/translations';
@@ -19,8 +21,8 @@ import { CONTACT_INFO, SOCIAL_LINKS, getWhatsAppNumber } from '../config/constan
 const Home = () => {
   const { theme } = useTheme();
   const { lang, region } = useLanguage();
-  const t = translations[lang];
-
+  const t = translations[lang] || translations.en;
+  const [activeLocation, setActiveLocation] = useState(null);
 
   const { data: dynamicCategories, isLoading: categoriesLoading } = useCategories();
   const { data: dynamicLocations, isLoading: locationsLoading } = useLocations(region);
@@ -207,33 +209,22 @@ const Home = () => {
             <p className="text-xl text-slate-600 dark:text-slate-400">{t.stores.desc}</p>
           </div>
 
-          <div className="relative w-full aspect-[16/9] lg:aspect-[21/9] bg-surface-100 dark:bg-surface-900 rounded-[50px] overflow-hidden shadow-inner border border-surface-200 dark:border-surface-800">
-            <div className="absolute inset-0 opacity-30 dark:opacity-20 pointer-events-none">
-              <svg className="w-full h-full" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
-                <path d="M100 100 Q 300 50 500 200 T 900 100" stroke="currentColor" strokeWidth="2" fill="none" className="text-slate-300 dark:text-slate-700" />
-                <path d="M50 400 Q 250 350 450 450 T 850 400" stroke="currentColor" strokeWidth="2" fill="none" className="text-slate-300 dark:text-slate-700" />
-              </svg>
-            </div>
-
-            {locations.map((loc, i) => (
-              <motion.div key={loc.name} initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.3, type: "spring" }} className="absolute z-30 cursor-pointer group" style={{ top: loc.top, left: loc.left }} onClick={() => openInGoogleMaps(loc.coords.lat, loc.coords.lng)}>
-                <div className="relative">
-                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white dark:bg-surface-800 px-4 py-2 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-surface-100 dark:border-surface-700">
-                    <p className="font-bold text-slate-900 dark:text-white text-sm">{loc.name}</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400">{t.stores.directions}</p>
-                  </div>
-                  <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform">
-                    <MapPin className="text-white w-5 h-5" />
-                  </div>
-                  <div className="absolute inset-0 w-8 h-8 bg-primary-600 rounded-full animate-ping opacity-25"></div>
-                </div>
-              </motion.div>
-            ))}
+          <div className="w-full h-[450px] lg:h-[520px] rounded-[36px] overflow-hidden shadow-2xl border border-surface-200 dark:border-surface-800">
+            <OutletMap locations={locations} activeLocation={activeLocation} />
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mt-12">
             {locations.map((loc) => (
-              <motion.div key={loc.name} whileHover={{ y: -10 }} onClick={() => openInGoogleMaps(loc.coords.lat, loc.coords.lng)} className="glass p-6 rounded-3xl cursor-pointer border-transparent hover:border-primary-500/30 transition-all text-center group">
+              <motion.div
+                key={loc.name}
+                whileHover={{ y: -6 }}
+                onClick={() => setActiveLocation(loc)}
+                className={`glass p-6 rounded-3xl cursor-pointer transition-all text-center group border ${
+                  activeLocation?.id === loc.id
+                    ? 'border-[#D4AF37] ring-2 ring-[#D4AF37]/30 shadow-xl'
+                    : 'border-transparent hover:border-primary-500/30'
+                }`}
+              >
                 <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{loc.name}</h4>
                 <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">{loc.desc}</p>
                 <div className="text-primary-600 dark:text-primary-400 text-sm font-bold flex items-center justify-center gap-2 group-hover:gap-3 transition-all">

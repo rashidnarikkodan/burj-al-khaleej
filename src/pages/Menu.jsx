@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/ui/Navbar';
 import ProductDetailModal from '../features/products/components/ProductDetailModal';
 import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../lib/translations';
 import { getWhatsAppNumber } from '../config/constants';
 
 const Menu = () => {
