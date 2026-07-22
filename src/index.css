@@ -38,6 +38,30 @@ h1, h2, h3, h4, h5, h6, p, span, a, label, button, td, th, div {
   overflow-wrap: break-word;
 }
 
+/* Universal Action Pointer Cursor & Tactile UX */
+button,
+a,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+select,
+summary,
+.cursor-pointer,
+.btn-primary,
+.btn-secondary {
+  cursor: pointer !important;
+  touch-action: manipulation;
+}
+
+button:active,
+a:active,
+[role="button"]:active {
+  cursor: pointer !important;
+}
+
 /* Language-Specific Consistent Typography */
 :lang(ar),
 [lang="ar"],
